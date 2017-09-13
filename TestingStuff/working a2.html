@@ -1,0 +1,81 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>A2</title>
+  </head>
+  <body>
+    <script src="jquery-3.2.1.js"></script>
+    <script src="handlebars-v4.0.10.js"></script>
+
+
+    <button id='search'>Click Me</button>
+    <input id='input' value="search">
+    <div id='main'></div>
+
+    <script>
+    const button = $('#search');
+    const inString = $('#input');
+      button.on('click', function() {
+        console.log(fetchTitlesForSubreddit(inString.val()));
+      });
+
+      var titleList = document.getElementById("main");
+    	var titleArray = [];
+
+    	function fetchTitlesForSubreddit(subreddit){
+
+    		$.getJSON('https://www.reddit.com/r/' + subreddit + '.json', function(results){
+    			$.each(results.data.children, function(i, title) {
+
+            var url = title.data.permalink;
+            var mainTitle = title.data.title;
+            var score = title.data.score;
+            var comment = title.data.num_comments;
+
+            var newDiv = document.createElement('div');
+            newDiv.setAttribute('id', "div"+i);
+
+            var newLink = document.createElement('a');
+            newLink.setAttribute('id', "link"+i);
+            newLink.setAttribute('href', 'https://www.reddit.com' + url);
+            newLink.append(mainTitle);
+
+            var newScore = document.createElement('p');
+            newScore.setAttribute('id', "score"+i);
+            $(this).text(score);
+
+            var newComment = document.createElement('p');
+            newComment.setAttribute('id', "comment"+i);
+            if(comment > 0){
+              $('#comment'+i).text(comment);
+              console.log(comment);
+            }
+            else{
+               $('#comment'+i).text("No comments");
+            }
+
+            newDiv.append(newLink);
+            newDiv.append(score);
+            newDiv.append(newComment);
+/*
+            var newLink = $('<a/>')
+            .attr("id", "link"+i)
+            .attr('href', url)
+            .text(mainTitle);
+
+            var newDiv = $('<div/>')
+            .attr("id", "div"+i)
+            .append(newLink)
+            .append(/*score*)
+            .append(/*comments*);
+*/
+            titleList.append(newDiv);
+            i++;
+    			});
+    			//return titleList;
+    		});
+    	}
+    </script>
+  </body>
+</html>
